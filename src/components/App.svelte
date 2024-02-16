@@ -1,4 +1,5 @@
 <script>
+    
 //Imports
 import { onMount } from 'svelte';
 import * as d3 from 'd3';
@@ -8,7 +9,7 @@ let tempData = [];
 
 onMount(async () => {
 
-    const res = await fetch('owid-energy-data.csv'); 
+    const res = await fetch('truncated_energy_data.csv'); 
 
     const csv = await res.text();
 
@@ -18,3 +19,17 @@ onMount(async () => {
 
 });
 </script>
+
+<!--Website Code-->
+
+<main>
+    <h1>The World in Energy</h1>
+    <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+</main>
+
+<!--Styling for Website. Fonts and other things-->
+<style>
+    h1 {text-align: center;}
+
+</style>
