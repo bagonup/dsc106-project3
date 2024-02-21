@@ -92,33 +92,111 @@
 
     // Mapping for Continent Names
     const continentMapping = {
-      'NA': 'North America',
-      'AS': 'Asia',
-      'EU': 'Europe',
-      'AF': 'Africa',
-      'SA': 'South America',
-      'OC': 'Oceania',
+      NA: "North America",
+      AS: "Asia",
+      EU: "Europe",
+      AF: "Africa",
+      SA: "South America",
+      OC: "Oceania",
     };
-    
+
     g.append("text")
       .attr("transform", function (d) {
         const centroid = label.centroid(d);
-        const angle = ((d.startAngle + d.endAngle) / 2 * (180 / Math.PI)) - 90;
+        const angle = ((d.startAngle + d.endAngle) / 2) * (180 / Math.PI) - 90;
         const rotate = angle > 90 && angle < 270 ? angle + 180 : angle;
-        const newX = centroid[0] * .9;
-        const newY = centroid[1] * .9;
+        const newX = centroid[0] * 0.9;
+        const newY = centroid[1] * 0.9;
 
         return "translate(" + [newX, newY] + ") rotate(" + rotate + ")";
+      })
+      .attr("dy", "0.35em")
+      .style("text-anchor", "middle")
+      .text(function (d) {
+        return continentMapping[d.data.Continent];
+      });
+
+    const backButton = document.getElementById("backButton");
+    backButton.addEventListener("click", handleBackButtonClick);
+    function handleBackButtonClick() {
+      d3.select("#newpie svg").remove();
+      backButton.style.display = "none";
+
+      var svg = d3
+        .select("#continentPie")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
+      const tooltip = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+      var pie = d3
+        .pie()
+        .value(function (d) {
+          return d.total_consumption;
+        })
+        .sort(null);
+
+      var path = d3
+        .arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+      var label = d3
+        .arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40);
+
+      var g = svg
+        .selectAll(".arc")
+        .data(pie(dataWithNamedProperties))
+        .enter()
+        .append("g")
+        .attr("class", "arc");
+
+      g.append("path")
+        .attr("d", path)
+        .style("fill", function (d) {
+          return color(d.data.Continent);
+        });
+
+      // Mapping for Continent Names
+      const continentMapping = {
+        NA: "North America",
+        AS: "Asia",
+        EU: "Europe",
+        AF: "Africa",
+        SA: "South America",
+        OC: "Oceania",
+      };
+
+      g.append("text")
+        .attr("transform", function (d) {
+          const centroid = label.centroid(d);
+          const angle =
+            ((d.startAngle + d.endAngle) / 2) * (180 / Math.PI) - 90;
+          const rotate = angle > 90 && angle < 270 ? angle + 180 : angle;
+          const newX = centroid[0] * 0.9;
+          const newY = centroid[1] * 0.9;
+
+          return "translate(" + [newX, newY] + ") rotate(" + rotate + ")";
         })
         .attr("dy", "0.35em")
         .style("text-anchor", "middle")
         .text(function (d) {
           return continentMapping[d.data.Continent];
-    });
-
-    function constructInitialPieChart(){
-      
+        });
+      g.on("click", (event, d) => handleClick(event, d));
     }
+
+    function constructInitialPieChart() {}
 
     function handleMouseOver(event, d) {
       const cdata = `
@@ -164,6 +242,7 @@
       console.log("mouse is not");
     }
     function constructPieChart(data) {
+      backButton.style.display = "1";
       d3.select("svg").remove();
       d3.select("#newpie svg").remove();
       const newSvg = d3
@@ -219,7 +298,8 @@
         .append("text")
         .attr("transform", function (d) {
           const centroid = label.centroid(d);
-          const angle = ((d.startAngle + d.endAngle) / 2 * (180 / Math.PI)) - 90;
+          const angle =
+            ((d.startAngle + d.endAngle) / 2) * (180 / Math.PI) - 90;
           const rotate = angle > 90 && angle < 270 ? angle + 180 : angle;
           const newX = centroid[0] * 0.8;
           const newY = centroid[1] * 0.8;
@@ -230,7 +310,7 @@
         .style("text-anchor", "middle")
         .text(function (d) {
           return d.data.country;
-    });
+        });
 
       newG
         .on("mouseover", (event, d) => handleMouseOver(event, d))
@@ -240,6 +320,7 @@
     g.on("click", (event, d) => handleClick(event, d));
 
     function handleClick(event, d) {
+      backButton.style.display = "block";
       const clickedContinent = d.data.Continent;
       const countries = fixdata.filter(
         (country) => country.Continent === clickedContinent
@@ -248,34 +329,86 @@
       console.log("constructing new pie map with: " + clickedContinent);
     }
   });
-  
 </script>
 
 <!--Website Code-->
 
 <main>
   <h1>The World in Energy</h1>
-  
+  <h2>
+    <button id="backButton" style="display: none;">Back to Continent</button>
+  </h2>
   <body>
     <div id="continentPie"></div>
     <div id="newpie"></div>
   </body>
-  
+  <p>
+    The data we are utilizing for our visualization boils down to two things,
+    location and energy consumption for the year 2022. Because our data is very
+    specific and does not vary across time, we chose to use an arc mark or pie
+    chart to display this information. The two other considerations for marks
+    were the bar chart and the sunburst chart. The bar chart or more
+    specifically, the stacked bar chart, would have achieved what we wanted to
+    show, which was the differing total consumptions across location and type of
+    energy through the length of each bar category and would have shown the
+    total consumption value or percentage of the total value on the axis.
+    However, due to the specific data we are using, a bar chart would be too
+    complex. For example, if we chose to create a stacked bar chart, we would
+    only have one bar since we are not comparing global total consumption
+    against other global total consumptions, which would make the one bar
+    visually unappealing and seem like the visualization was missing data. And
+    if we were to split the stacked bar chart to where the different locations
+    were side by side, we would lose the main focus of the visualization which
+    is to show how each location contributes to the global consumption of
+    energy. For these reasons, we didn’t choose the bar chart. The sunburst
+    chart, however, was the original visualization chosen for this specific
+    project. But, the main problem didn’t come from the visualization, but
+    rather the data. For the sunburst chart, nested data or data with hierarchy
+    is what makes the sunburst chart work, but our data is not nested. With
+    enough time, we could have arranged our data in a way to satisfy this
+    hierarchy structure to utilize the sunburst, but we couldn’t get to it. Thus
+    we settled on a chart that matches the simplicity of our data. Besides
+    marks, the simplicity of a pie chart means there are few visual encodings
+    used. As shown, a piece of a pie is represented by location, whether that be
+    the continent or country, and the width of that piece is represented by the
+    total consumption of energy by that category. Color is used to indicate that
+    the categories are different, but they do not indicate anything else beyond
+    that. We also made sure to add …. For the interaction technique, we chose to
+    use zooming. We felt that zooming would best fit our visualization because
+    we wanted to show our data from the large scale to the small scale and
+    zooming helped achieve that as by zooming into each piece of the pie, we
+    could show more information about our data. … Development for this project
+    first started with filtering out our data to only the relevant columns
+    necessary for our visualization. This was done to avoid loading in an
+    extremely large dataset into our webpage along with keeping the
+    visualization concise with our vision and not intentionally or accidentally
+    adding in new or irrelevant variables into our visualization. Both Brian and
+    David helped filter out the data, and this step took about thirty minutes.
+    The next step was creating the necessary parts of our visualization in
+    D3/Svetle, and this was the longest part of the development process. This
+    took about … days, with a working time of about 4 hours per day. This was
+    due to both of us being new to D3/Svelte and trying to learn along the way
+    how to implement certain attributes and features necessary to our
+    visualization. Finally, the last part of development was the styling of the
+    webpage, such as fonts and positioning. This took about two hours to do as
+    most of it was trying to match the style of the webpage to our
+    visualization.
+  </p>
 </main>
 
 <!--Styling for Website. Fonts and other things-->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+  @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
   h1 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     text-align: center;
   }
   div {
     text-align: center;
   }
   body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     text-align: center;
     display: flex;
     justify-content: center;
