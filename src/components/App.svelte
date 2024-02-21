@@ -46,7 +46,7 @@
     var radius = Math.min(width, height) / 2;
 
     var svg = d3
-      .select("body")
+      .select("#continentPie")
       .append("svg")
       .attr("width", width)
       .attr("height", height)
@@ -90,16 +90,35 @@
         return color(d.data.Continent);
       });
 
+    // Mapping for Continent Names
+    const continentMapping = {
+      'NA': 'North America',
+      'AS': 'Asia',
+      'EU': 'Europe',
+      'AF': 'Africa',
+      'SA': 'South America',
+      'OC': 'Oceania',
+    };
+    
     g.append("text")
       .attr("transform", function (d) {
         const centroid = label.centroid(d);
-        const angle = Math.atan2(centroid[1], centroid[0]) * (180 / Math.PI);
-        return "translate(" + centroid + ") rotate(" + angle + ")";
-      })
-      .attr("dy", "0.35em")
-      .text(function (d) {
-        return d.data.Continent;
-      });
+        const angle = ((d.startAngle + d.endAngle) / 2 * (180 / Math.PI)) - 90;
+        const rotate = angle > 90 && angle < 270 ? angle + 180 : angle;
+        const newX = centroid[0] * .9;
+        const newY = centroid[1] * .9;
+
+        return "translate(" + [newX, newY] + ") rotate(" + rotate + ")";
+        })
+        .attr("dy", "0.35em")
+        .style("text-anchor", "middle")
+        .text(function (d) {
+          return continentMapping[d.data.Continent];
+    });
+
+    function constructInitialPieChart(){
+      
+    }
 
     function handleMouseOver(event, d) {
       const cdata = `
@@ -145,6 +164,7 @@
       console.log("mouse is not");
     }
     function constructPieChart(data) {
+      d3.select("svg").remove();
       d3.select("#newpie svg").remove();
       const newSvg = d3
         .select("#newpie")
@@ -199,22 +219,18 @@
         .append("text")
         .attr("transform", function (d) {
           const centroid = label.centroid(d);
-          const angle = Math.atan2(centroid[1], centroid[0]) * (180 / Math.PI);
-          const newAngle = angle - 90;
+          const angle = ((d.startAngle + d.endAngle) / 2 * (180 / Math.PI)) - 90;
+          const rotate = angle > 90 && angle < 270 ? angle + 180 : angle;
           const newX = centroid[0] * 0.8;
           const newY = centroid[1] * 0.8;
 
-          if (centroid[1] > 0) {
-            return "translate(" + [newX, newY] + ") rotate(" + newAngle + ")";
-          } else {
-            return "translate(" + [newX, newY] + ")";
-          }
+          return "translate(" + [newX, newY] + ") rotate(" + rotate + ")";
         })
         .attr("dy", "0.35em")
         .style("text-anchor", "middle")
         .text(function (d) {
           return d.data.country;
-        });
+    });
 
       newG
         .on("mouseover", (event, d) => handleMouseOver(event, d))
@@ -232,27 +248,38 @@
       console.log("constructing new pie map with: " + clickedContinent);
     }
   });
+  
 </script>
 
 <!--Website Code-->
 
 <main>
   <h1>The World in Energy</h1>
-  <p>
-    Visit <a href="https://kit.svelte.dev">z</a> to read the documentation
-  </p>
-  <div id="newpie"></div>
+  
+  <body>
+    <div id="continentPie"></div>
+    <div id="newpie"></div>
+  </body>
+  
 </main>
 
 <!--Styling for Website. Fonts and other things-->
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
   h1 {
+    font-family: 'Open Sans', sans-serif;
     text-align: center;
   }
   div {
     text-align: center;
   }
-  bosdy {
+  body {
+    font-family: 'Open Sans', sans-serif;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
   }
 </style>
