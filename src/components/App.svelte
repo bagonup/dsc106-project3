@@ -335,6 +335,7 @@
 
 <main>
   <h1>The World in Energy</h1>
+  <h2>Consumption is measured in terawatt-hours.</h2>
   <h2>
     <button id="backButton" style="display: none; margin: auto;"
       >Back to Continent</button
@@ -344,6 +345,7 @@
     <div id="continentPie"></div>
     <div id="newpie"></div>
   </body>
+  <h2>Writeup</h2>
   <p>
     The data we are utilizing for our visualization boils down to two things,
     location and energy consumption for the year 2022. Because our data is very
@@ -416,5 +418,8 @@
     justify-content: center;
     align-items: center;
     margin: 0;
+  }
+  p {
+    text-align: left;
   }
 </style>
