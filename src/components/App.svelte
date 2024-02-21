@@ -41,8 +41,8 @@
 
     // Assuming data is an array of objects with 'country' and 'consumption' properties
 
-    var width = 1800;
-    var height = 1000;
+    var width = window.innerWidth - 100;
+    var height = window.innerHeight;
     var radius = Math.min(width, height) / 2;
 
     var svg = d3
@@ -336,7 +336,9 @@
 <main>
   <h1>The World in Energy</h1>
   <h2>
-    <button id="backButton" style="display: none;">Back to Continent</button>
+    <button id="backButton" style="display: none; margin: auto;"
+      >Back to Continent</button
+    >
   </h2>
   <body>
     <div id="continentPie"></div>
