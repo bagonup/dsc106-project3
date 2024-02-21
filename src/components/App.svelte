@@ -145,6 +145,7 @@
       console.log("mouse is not");
     }
     function constructPieChart(data) {
+      d3.select("#newpie svg").remove();
       const newSvg = d3
         .select("#newpie")
         .append("svg")
@@ -184,6 +185,14 @@
         .attr("d", newPath)
         .style("fill", function (d) {
           return newColor(d.data.country);
+        })
+        .transition()
+        .duration(700)
+        .attrTween("d", function (d) {
+          const interpolate = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+          return function (t) {
+            return newPath(interpolate(t));
+          };
         });
 
       newG
@@ -206,6 +215,7 @@
         .text(function (d) {
           return d.data.country;
         });
+
       newG
         .on("mouseover", (event, d) => handleMouseOver(event, d))
         .on("mouseout", () => handleMouseOut());
@@ -219,7 +229,6 @@
         (country) => country.Continent === clickedContinent
       );
       constructPieChart(countries);
-      svg.remove();
       console.log("constructing new pie map with: " + clickedContinent);
     }
   });
@@ -230,7 +239,7 @@
 <main>
   <h1>The World in Energy</h1>
   <p>
-    Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
+    Visit <a href="https://kit.svelte.dev">z</a> to read the documentation
   </p>
   <div id="newpie"></div>
 </main>
@@ -243,7 +252,7 @@
   div {
     text-align: center;
   }
-  svg {
+  bosdy {
     text-align: center;
   }
 </style>
