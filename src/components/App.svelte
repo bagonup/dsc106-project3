@@ -201,6 +201,7 @@
     function handleMouseOver(event, d) {
       const cdata = `
     Country: ${d.data.country}<br>
+    Total Consumption: ${d.data.total_consumption}<br>
     Biofuel Consumption: ${d.data.biofuel_consumption}<br>
     Coal Consumption: ${d.data.coal_consumption}<br>
     Gas Consumption: ${d.data.gas_consumption}<br>
@@ -334,8 +335,9 @@
 <!--Website Code-->
 
 <main>
-  <h1>The World in Energy</h1>
-  <h2>Consumption is measured in terawatt-hours.</h2>
+  <h1>Energy consumption throughout the WORLD</h1>
+  <h3>Using an interactive pie graph</h3>
+  <h5>Consumption is measured in terawatt-hours.</h5>
   <h2>
     <button id="backButton" style="display: none; margin: auto;"
       >Back to Continent</button
@@ -377,26 +379,38 @@
     the continent or country, and the width of that piece is represented by the
     total consumption of energy by that category. Color is used to indicate that
     the categories are different, but they do not indicate anything else beyond
-    that. We also made sure to add …. For the interaction technique, we chose to
-    use zooming. We felt that zooming would best fit our visualization because
-    we wanted to show our data from the large scale to the small scale and
-    zooming helped achieve that as by zooming into each piece of the pie, we
-    could show more information about our data. … Development for this project
-    first started with filtering out our data to only the relevant columns
-    necessary for our visualization. This was done to avoid loading in an
-    extremely large dataset into our webpage along with keeping the
-    visualization concise with our vision and not intentionally or accidentally
-    adding in new or irrelevant variables into our visualization. Both Brian and
-    David helped filter out the data, and this step took about thirty minutes.
-    The next step was creating the necessary parts of our visualization in
-    D3/Svetle, and this was the longest part of the development process. This
-    took about … days, with a working time of about 4 hours per day. This was
-    due to both of us being new to D3/Svelte and trying to learn along the way
-    how to implement certain attributes and features necessary to our
-    visualization. Finally, the last part of development was the styling of the
-    webpage, such as fonts and positioning. This took about two hours to do as
-    most of it was trying to match the style of the webpage to our
-    visualization.
+    that. We also made sure to add a tooltip for the country pie; which is
+    accessed through clicking on a continent which brings that continent's
+    respective countries, and you're able to hover your mouse over the country
+    that you want information for, and tooltip will appear giving all the
+    different enery and the consumption.This tooltip allows you to easily read
+    the data without having to wait for loading; and it instantly changes the
+    data shown if you hover over a different country making it easy to compare
+    between what you want. For the interaction technique, we chose to use
+    zooming. We felt that zooming would best fit our visualization because we
+    wanted to show our data from the large scale to the small scale and zooming
+    helped achieve that as by zooming into each piece of the pie, we could show
+    more information about our data. … Development for this project first
+    started with filtering out our data to only the relevant columns necessary
+    for our visualization. This was done to avoid loading in an extremely large
+    dataset into our webpage along with keeping the visualization concise with
+    our vision and not intentionally or accidentally adding in new or irrelevant
+    variables into our visualization; along with the tooltip being a helpful
+    tool. Along with that we also added a back button; so in the scenerio that a
+    reader wants to look a different continent's information they can press the
+    back button (which only shows up after you clicked a continent as it
+    wouldn't make sense to have a button when you're already on the continent
+    chart); making it so you don't have to reload the page to access new
+    information. Both Bryan and David helped filter out the data, and this step
+    took about thirty minutes. The next step was creating the necessary parts of
+    our visualization in D3/Svetle, and this was the longest part of the
+    development process. This took about 4 days, with a working time of about 4
+    hours per day. This was due to both of us being new to D3/Svelte and trying
+    to learn along the way how to implement certain attributes and features
+    necessary to our visualization. Finally, the last part of development was
+    the styling of the webpage, such as fonts and positioning. This took about
+    two hours to do as most of it was trying to match the style of the webpage
+    to our visualization.
   </p>
 </main>
 
@@ -407,6 +421,41 @@
   h1 {
     font-family: "Open Sans", sans-serif;
     text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    font-size: 4rem;
+    background: linear-gradient(
+      to right,
+      #ef5350,
+      #f48fb1,
+      #7e57c2,
+      #2196f3,
+      #26c6da,
+      #43a047,
+      #f9a825,
+      #ff5722
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  h3 {
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    background: linear-gradient(
+      to right,
+      #f48fb1,
+      #7e57c2,
+      #2196f3,
+      #26c6da,
+      #43a047,
+      #f9a825,
+      #ff5722
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   div {
     text-align: center;
